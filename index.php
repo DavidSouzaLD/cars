@@ -13,7 +13,9 @@ include ("./connection.php");
 <body>
     <h1>Painel de buscas</h1>
     <form method="GET">
-        <input name="search" type="text" placeholder="Searching...">
+        <input name="search" type="text" placeholder="Searching..."
+            value="<?php if (isset($_GET["search"]))
+                echo $_GET["search"]; ?>">
         <button type="submit">Search</button>
     </form>
     <table border="1">
