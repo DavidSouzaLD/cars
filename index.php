@@ -12,8 +12,8 @@ include ("./connection.php");
 
 <body>
     <h1>Painel de buscas</h1>
-    <form action="">
-        <input name="search-ipt" type="text" placeholder="Searching...">
+    <form method="GET">
+        <input name="search" type="text" placeholder="Searching...">
         <button type="submit">Search</button>
     </form>
     <table border="1">
@@ -22,9 +22,44 @@ include ("./connection.php");
             <th>Model</th>
             <th>Vehicle</th>
         </tr>
-        <tr>
-            <td colspan="3"> Text text text </td>
-        </tr>
+        <?php
+        if (!isset($_GET["search"])) {
+            ?>
+            <tr>
+                <td colspan="3">Search not found!</td>
+            </tr>
+            <?php
+        } else {
+            $search = $mysqli->real_escape_string($_GET["search"]);
+            $sql_code = "SELECT * 
+            FROM veiculo 
+            WHERE fabricante LIKE '%$search%' 
+            OR modelo LIKE '%$search%'
+            OR veiculo LIKE '%$search%'";
+
+            $sql_query = $mysqli->query($sql_code) or die("Error in resultas!" . $mysqli->error);
+
+            if ($sql_query->num_rows == 0) {
+                ?>
+                <tr>
+                    <td colspan="3">No results found!</td>
+                </tr>
+                <?php
+            } else {
+                while ($data = $sql_query->fetch_assoc()) {
+                    ?>
+                    <tr>
+                        <td><?php echo $data["fabricante"] ?></td>
+                        <td><?php echo $data["veiculo"] ?></td>
+                        <td><?php echo $data["modelo"] ?></td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+            <?php
+        }
+        ?>
     </table>
 </body>
 
